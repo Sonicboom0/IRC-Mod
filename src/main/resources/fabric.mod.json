@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "ircchat",
+  "version": "${version}",
+  "name": "Ircchat",
+  "description": "A mod that connects Minecraft to an IRC chat server",
+  "authors": [
+    "Sonicboom"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/ircchat/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.sonicboom.ircchat.client.IrcchatClient"
+    ],
+    "main": [
+      "com.sonicboom.ircchat.Ircchat"
+    ]
+  },
+  "mixins": [
+    "ircchat.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.9",
+    "fabric": "*",
+    "fabric-key-binding-api-v1": "*",
+    "minecraft": "1.19"
+  }
+}
