@@ -5,11 +5,13 @@ import com.sonicboom.ircchat.client.IrcchatClient;
 import com.sonicboom.ircchat.client.listener.IrcListener;
 import com.sonicboom.ircchat.client.util.ChatUtil;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
@@ -51,10 +53,15 @@ public class ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
 
     @Inject(at = @At("HEAD"), method = "sendChatMessage(Ljava/lang/String;Lnet/minecraft/text/Text;)V", cancellable = true)
     public void onChatMessage(String message, Text preview, CallbackInfo ci) {
-        if (IrcchatClient.ircActivated && IrcchatClient.bot != null && IrcchatClient.bot.isConnected()) {
-            ChatUtil.formatIrcMessage(ChatUtil.getUsername(), message);
-            IrcchatClient.bot.sendIRC().message("#minecraft", message);
+        if (IrcchatClient.ircActivated) {
             ci.cancel();
+            if (IrcchatClient.bot != null && IrcchatClient.bot.isConnected()) {
+                ChatUtil.formatIrcMessage(ChatUtil.getUsername(), message);
+                IrcchatClient.bot.sendIRC().message("#minecraft", message);
+            }
+            else {
+                MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.literal("Not connected").formatted(Formatting.RED));
+            }
         }
     }
 }
