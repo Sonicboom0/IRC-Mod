@@ -12,6 +12,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import org.apache.commons.text.StringEscapeUtils;
 import org.jetbrains.annotations.Nullable;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
@@ -57,7 +58,8 @@ public class ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
             ci.cancel();
             if (IrcchatClient.bot != null && IrcchatClient.bot.isConnected()) {
                 ChatUtil.formatIrcMessage(ChatUtil.getUsername(), message);
-                IrcchatClient.bot.sendIRC().message("#minecraft", message);
+                String escapedMessage = StringEscapeUtils.escapeJava(message);
+                IrcchatClient.bot.sendIRC().message("#minecraft", escapedMessage);
             }
             else {
                 MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.literal("Not connected").formatted(Formatting.RED));
